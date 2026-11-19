@@ -88,6 +88,7 @@ footer .wrap{padding-block:22px;display:flex;justify-content:space-between;align
 .map-toolbar button{min-height:44px;padding:8px 15px;border:0;background:var(--olive);color:white;font:inherit;cursor:pointer}
 .map-trigger:focus-visible,.venue-map figcaption button:focus-visible,.map-toolbar button:focus-visible{outline:3px solid #728151;outline-offset:3px}
 html:has(#venue-map-dialog[open]){overflow:hidden}
+.venue-map-button{background:none;border:0;padding:0;min-height:44px;color:inherit;font:inherit;text-decoration:underline;text-underline-offset:4px;cursor:pointer}.venue-map-button:focus-visible{outline:3px solid #728151;outline-offset:3px}
 </style>
 </head>
 <body id="top">
@@ -121,7 +122,7 @@ html:has(#venue-map-dialog[open]){overflow:hidden}
 <div class="venue-grid">
 <figure><a href="https://arvewedding.kr/#" aria-label="아르베웨딩 공식 사이트에서 사진 더 보기"><img src="https://img.superchart.com/images/store-1681062430/1681062430-01-800.webp" alt="아르베웨딩 예식장 사진" loading="lazy"></a><figcaption>아르베웨딩 현장 사진 · <a href="https://superchart.com/ko/stores/arve/">사진 출처</a></figcaption></figure>
 <div class="venue-info"><h3>아르베웨딩</h3><p>서울특별시 강남구 봉은사로 302<br>선정릉역 4번 출구</p>
-<div class="venue-links"><a class="cta" href="https://map.naver.com/p/entry/place/1681062430">네이버 지도</a><a href="https://arvewedding.kr/24">공식 약도</a><a href="https://arvewedding.kr/">공식 갤러리</a></div>
+<div class="venue-links"><a class="cta" href="https://map.naver.com/p/entry/place/1681062430">네이버 지도</a><button class="venue-map-button" type="button" data-open-map aria-haspopup="dialog">공식 약도</button><a href="https://arvewedding.kr/">공식 갤러리</a></div>
 <figure class="venue-map"><button class="map-trigger" type="button" data-open-map aria-label="아르베웨딩 약도 크게 보기" aria-haspopup="dialog"><img src="./arve-map.webp" width="899" height="1348" loading="lazy" alt="아르베웨딩 약도. 선정릉역 4번 출구에서 도보 5분. 1번 출구 앞 셔틀버스와 외부 주차장 위치 안내"></button><figcaption><button type="button" data-open-map aria-haspopup="dialog">약도 크게 보기</button></figcaption></figure>
 <dialog id="venue-map-dialog" aria-labelledby="venue-map-title">
 <div class="map-toolbar"><h3 id="venue-map-title">아르베웨딩 약도</h3><form method="dialog"><button type="submit" autofocus>닫기</button></form></div>
