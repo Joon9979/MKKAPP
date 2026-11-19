@@ -78,15 +78,12 @@ footer .wrap{padding-block:22px;display:flex;justify-content:space-between;align
 .tasks input{width:20px;height:20px;margin:3px 0 0;flex-shrink:0;accent-color:var(--olive)}
 .tasks input:checked+span{color:var(--mute);text-decoration:line-through}
 @media(max-width:720px){.venue-grid{grid-template-columns:1fr}.mast{flex-wrap:wrap;gap:0;padding-top:12px}.mast nav{width:100%;justify-content:space-between}.brand-lockup{gap:8px}.check-timing{display:block;margin-left:16px}}
-.venue-map{margin:18px 0}.venue-map img{aspect-ratio:auto;width:100%;height:auto;object-fit:contain;border:1px solid var(--line)}.venue-map figcaption{padding:8px 0}
-.map-trigger{display:block;width:100%;background:none;border:0;padding:0;cursor:zoom-in}
-.venue-map figcaption button{background:none;border:0;padding:8px 0;min-height:44px;text-decoration:underline;color:var(--olive);font:inherit;cursor:pointer}
 #venue-map-dialog{width:min(96vw,960px);max-height:92dvh;padding:0;border:1px solid var(--line);background:var(--paper);color:var(--ink);overflow:auto}
 #venue-map-dialog::backdrop{background:#201d17ba}
 #venue-map-dialog img{width:100%;height:auto;object-fit:contain}
 .map-toolbar{position:sticky;top:0;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 16px;background:var(--paper);border-bottom:1px solid var(--line)}
 .map-toolbar button{min-height:44px;padding:8px 15px;border:0;background:var(--olive);color:white;font:inherit;cursor:pointer}
-.map-trigger:focus-visible,.venue-map figcaption button:focus-visible,.map-toolbar button:focus-visible{outline:3px solid #728151;outline-offset:3px}
+.map-toolbar button:focus-visible{outline:3px solid #728151;outline-offset:3px}
 html:has(#venue-map-dialog[open]){overflow:hidden}
 .venue-map-button{background:none;border:0;padding:0;min-height:44px;color:inherit;font:inherit;text-decoration:underline;text-underline-offset:4px;cursor:pointer}.venue-map-button:focus-visible{outline:3px solid #728151;outline-offset:3px}
 </style>
@@ -123,7 +120,6 @@ html:has(#venue-map-dialog[open]){overflow:hidden}
 <figure><a href="https://arvewedding.kr/#" aria-label="아르베웨딩 공식 사이트에서 사진 더 보기"><img src="https://img.superchart.com/images/store-1681062430/1681062430-01-800.webp" alt="아르베웨딩 예식장 사진" loading="lazy"></a><figcaption>아르베웨딩 현장 사진 · <a href="https://superchart.com/ko/stores/arve/">사진 출처</a></figcaption></figure>
 <div class="venue-info"><h3>아르베웨딩</h3><p>서울특별시 강남구 봉은사로 302<br>선정릉역 4번 출구</p>
 <div class="venue-links"><a class="cta" href="https://map.naver.com/p/entry/place/1681062430">네이버 지도</a><button class="venue-map-button" type="button" data-open-map aria-haspopup="dialog">공식 약도</button><a href="https://arvewedding.kr/">공식 갤러리</a></div>
-<figure class="venue-map"><button class="map-trigger" type="button" data-open-map aria-label="아르베웨딩 약도 크게 보기" aria-haspopup="dialog"><img src="./arve-map.webp" width="899" height="1348" loading="lazy" alt="아르베웨딩 약도. 선정릉역 4번 출구에서 도보 5분. 1번 출구 앞 셔틀버스와 외부 주차장 위치 안내"></button><figcaption><button type="button" data-open-map aria-haspopup="dialog">약도 크게 보기</button></figcaption></figure>
 <dialog id="venue-map-dialog" aria-labelledby="venue-map-title">
 <div class="map-toolbar"><h3 id="venue-map-title">아르베웨딩 약도</h3><form method="dialog"><button type="submit" autofocus>닫기</button></form></div>
 <img src="./arve-map.webp" width="899" height="1348" alt="아르베웨딩 약도. 선정릉역 4번 출구에서 도보 5분. 1번 출구 앞 셔틀버스와 외부 주차장 위치 안내">
