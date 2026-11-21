@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>예식 비용 | 무꾸스튜디오</title>
+<style>
+:root{color-scheme:light;--ink:#292820;--paper:#fbf9f4;--olive:#424a35;--line:#d9d5c8}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 system-ui,sans-serif;overflow-wrap:anywhere}
+main{width:min(960px,calc(100% - 32px));margin:24px auto 64px}
+a{color:var(--olive)}h1,h2,p{margin:0 0 12px}
+h1{font-size:clamp(2rem,6vw,3rem);margin-top:20px}h2{font-size:1.25rem}
+.summary,.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,175px),1fr));gap:12px}
+.summary{margin:24px 0}.summary div,.card{background:white;border:1px solid var(--line);border-radius:14px;padding:16px}
+.summary span,.summary strong{display:block}.summary strong{font-size:1.25rem}
+.card{margin:14px 0}.actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
+button,input{font:inherit;min-height:44px;border-radius:8px}button{padding:6px 12px;background:var(--olive);color:white;border:1px solid transparent;cursor:pointer}button.secondary{background:white;color:var(--olive);border-color:var(--line)}
+input{width:100%;padding:8px;border:1px solid #888477;background:white;color:var(--ink)}label{display:grid;gap:4px}
+.extra-row{border-top:1px solid var(--line);padding-top:10px;margin-top:10px}.totals{margin:12px 0 0}
+#status{color:#6b4323;min-height:1.5em}
+</style>
+</head>
+<body><main>
+<a href="./">무꾸스튜디오 홈</a>
+<h1>예식 비용</h1>
+<p>총금액에는 기본 계약 금액을, 별도 비용에는 추가 항목을 입력하세요. 잔금은 기본 계약 금액과 별도 비용을 합친 뒤 낸 계약금을 빼서 계산해요.</p>
+<p>입력한 비용은 이 브라우저에 저장돼요.</p>
+<section class="summary" aria-label="전체 비용 합계">
+<div><span>총 예정 비용</span><strong id="sum-total">0원</strong></div>
+<div><span>낸 계약금</span><strong id="sum-paid">0원</strong></div>
+<div><span>별도 비용</span><strong id="sum-extra">0원</strong></div>
+<div><span>남은 잔금</span><strong id="sum-balance">0원</strong></div>
+</section>
+<button type="button" id="add">비용 항목 추가</button>
+<p id="status" role="status"></p>
+<section id="items" aria-label="비용 항목"></section>
+<template id="item">
+<article class="card">
+<div class="fields">
+<label>항목 이름<input class="name" maxlength="100" placeholder="예식장, 스드메 등"></label>
+<label>총금액 (원)<input class="total" inputmode="numeric" placeholder="0"></label>
+<label>낸 계약금 (원)<input class="paid" inputmode="numeric" placeholder="0"></label>
+</div>
+<h2 style="margin-top:16px">별도 비용</h2>
+<div class="extras"></div>
+<div class="actions"><button type="button" class="secondary add-extra">별도 비용 추가</button><button type="button" class="secondary remove">비용 항목 삭제</button></div>
+<p class="totals"><span class="extra-total"></span> · <strong class="balance"></strong></p>
+</article>
+</template>
+<template id="extra"><div class="extra-row">
+<div class="fields"><label>별도 비용 이름<input class="name" maxlength="100" placeholder="본식 스냅 등"></label><label>금액 (원)<input class="amount" inputmode="numeric" placeholder="0"></label></div>
+<div class="actions"><button type="button" class="secondary remove">별도 비용 삭제</button></div>
+</div></template>
+<script>
+const key = 'mukku.wedding.expenses.v1';
+const status = document.querySelector('#status');
+const formatter = new Intl.NumberFormat('ko-KR');
+const won = amount => formatter.format(amount) + '원';
+const amount = value => Number(value.replace(/[^0-9]/g, '').slice(0, 12));
+const items = document.querySelector('#items');
+
+let entries = [{name:'아르베웨딩', total:18600000, paid:0, extras:[{name:'본식 스냅', amount:330000}]}];
+try {
+  const saved = localStorage.getItem(key);
+  if (saved !== null) {
+    const parsed = JSON.parse(saved);
+    if (Array.isArray(parsed)) entries = parsed;
+  }
+} catch {
+  status.textContent = '저장된 비용을 불러오지 못했어요.';
+}
+
+const cards = new Map();
+function refresh() {
+  let total = 0, paid = 0, extra = 0, balance = 0;
+  for (const entry of entries) {
+    const added = entry.extras.reduce((sum, row) => sum + row.amount, 0);
+    const remaining = entry.total + added - entry.paid;
+    total += entry.total + added;
+    paid += entry.paid;
+    extra += added;
+    balance += Math.max(0, remaining);
+    const card = cards.get(entry);
+    card.querySelector('.extra-total').textContent = '별도 비용 ' + won(added);
+    card.querySelector('.balance').textContent = remaining < 0
+      ? '초과 납부 ' + won(-remaining)
+      : '잔금 ' + won(remaining);
+  }
+  for (const [id, value] of Object.entries({total, paid, extra, balance})) {
+    document.querySelector('#sum-' + id).textContent = won(value);
+  }
+}
+function save() {
+  refresh();
+  try {
+    localStorage.setItem(key, JSON.stringify(entries));
+    status.textContent = '';
+  } catch {
+    status.textContent = '비용을 저장하지 못했어요. 이 페이지를 닫으면 변경사항이 사라질 수 있어요.';
+  }
+}
+function bind(input, record, field, money = false) {
+  input.value = money ? (record[field] ? formatter.format(record[field]) : '') : record[field];
+  input.addEventListener('input', () => {
+    record[field] = money ? amount(input.value) : input.value;
+    if (money) input.value = record[field] ? formatter.format(record[field]) : '';
+    save();
+  });
+}
+function addExtra(card, entry, extra) {
+  const row = document.querySelector('#extra').content.firstElementChild.cloneNode(true);
+  bind(row.querySelector('.name'), extra, 'name');
+  bind(row.querySelector('.amount'), extra, 'amount', true);
+  row.querySelector('.remove').addEventListener('click', () => {
+    if (!confirm('이 별도 비용을 삭제할까요?')) return;
+    entry.extras.splice(entry.extras.indexOf(extra), 1);
+    row.remove();
+    save();
+  });
+  card.querySelector('.extras').append(row);
+  return row;
+}
+function addCard(entry) {
+  const card = document.querySelector('#item').content.firstElementChild.cloneNode(true);
+  cards.set(entry, card);
+  bind(card.querySelector('.name'), entry, 'name');
+  bind(card.querySelector('.total'), entry, 'total', true);
+  bind(card.querySelector('.paid'), entry, 'paid', true);
+  for (const extra of entry.extras) addExtra(card, entry, extra);
+  card.querySelector('.add-extra').addEventListener('click', () => {
+    const extra = {name:'', amount:0};
+    entry.extras.push(extra);
+    addExtra(card, entry, extra).querySelector('.name').focus();
+    save();
+  });
+  card.querySelector('.actions > .remove').addEventListener('click', () => {
+    if (!confirm('이 항목과 별도 비용을 삭제할까요?')) return;
+    entries.splice(entries.indexOf(entry), 1);
+    cards.delete(entry);
+    card.remove();
+    save();
+  });
+  items.append(card);
+  return card;
+}
+for (const entry of entries) addCard(entry);
+refresh();
+document.querySelector('#add').addEventListener('click', () => {
+  const entry = {name:'', total:0, paid:0, extras:[]};
+  entries.push(entry);
+  addCard(entry).querySelector('.name').focus();
+  save();
+});
+</script></main></body></html>
