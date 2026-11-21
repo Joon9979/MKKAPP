@@ -23,7 +23,7 @@ input{width:100%;padding:8px;border:1px solid #888477;background:white;color:var
 <body><main>
 <a href="./">무꾸스튜디오 홈</a>
 <h1>예식 비용</h1>
-<p>총금액에는 기본 계약 금액을, 별도 비용에는 추가 항목을 입력하세요. 잔금은 기본 계약 금액과 별도 비용을 합친 뒤 낸 계약금을 빼서 계산해요.</p>
+<p>총금액은 기본 계약 금액과 별도 비용을 합한 금액이에요. 잔금은 기본 계약 금액에서 낸 계약금만 빼서 계산해요.</p>
 <p>입력한 비용은 이 브라우저에 저장돼요.</p>
 <section class="summary" aria-label="전체 비용 합계">
 <div><span>총 예정 비용</span><strong id="sum-total">0원</strong></div>
@@ -38,13 +38,13 @@ input{width:100%;padding:8px;border:1px solid #888477;background:white;color:var
 <article class="card">
 <div class="fields">
 <label>항목 이름<input class="name" maxlength="100" placeholder="예식장, 스드메 등"></label>
-<label>총금액 (원)<input class="total" inputmode="numeric" placeholder="0"></label>
+<label>기본 계약 금액 (원)<input class="total" inputmode="numeric" placeholder="0"></label>
 <label>낸 계약금 (원)<input class="paid" inputmode="numeric" placeholder="0"></label>
 </div>
 <h2 style="margin-top:16px">별도 비용</h2>
 <div class="extras"></div>
 <div class="actions"><button type="button" class="secondary add-extra">별도 비용 추가</button><button type="button" class="secondary remove">비용 항목 삭제</button></div>
-<p class="totals"><span class="extra-total"></span> · <strong class="balance"></strong></p>
+<p class="totals"><span class="item-total"></span> · <span class="extra-total"></span> · <strong class="balance"></strong></p>
 </article>
 </template>
 <template id="extra"><div class="extra-row">
@@ -75,12 +75,13 @@ function refresh() {
   let total = 0, paid = 0, extra = 0, balance = 0;
   for (const entry of entries) {
     const added = entry.extras.reduce((sum, row) => sum + row.amount, 0);
-    const remaining = entry.total + added - entry.paid;
+    const remaining = entry.total - entry.paid;
     total += entry.total + added;
     paid += entry.paid;
     extra += added;
     balance += Math.max(0, remaining);
     const card = cards.get(entry);
+    card.querySelector('.item-total').textContent = '총금액 ' + won(entry.total + added);
     card.querySelector('.extra-total').textContent = '별도 비용 ' + won(added);
     card.querySelector('.balance').textContent = remaining < 0
       ? '초과 납부 ' + won(-remaining)
