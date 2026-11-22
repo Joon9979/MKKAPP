@@ -24,7 +24,7 @@ input{width:100%;padding:8px;border:1px solid #888477;background:white;color:var
 <a href="./">무꾸웨딩일지 홈</a>
 <h1>예식 비용</h1>
 <p>총금액은 기본 계약 금액과 별도 비용을 합한 금액이에요. 잔금은 기본 계약 금액에서 낸 계약금만 빼서 계산해요.</p>
-<p>입력한 비용은 이 브라우저에 저장돼요.</p>
+<p>저장을 누르면 입력한 비용이 현재 브라우저에 저장돼요.</p>
 <section class="summary" aria-label="전체 비용 합계">
 <div><span>총 예정 비용</span><strong id="sum-total">0원</strong></div>
 <div><span>낸 계약금</span><strong id="sum-paid">0원</strong></div>
@@ -32,6 +32,7 @@ input{width:100%;padding:8px;border:1px solid #888477;background:white;color:var
 <div><span>남은 잔금</span><strong id="sum-balance">0원</strong></div>
 </section>
 <button type="button" id="add">비용 항목 추가</button>
+<button type="button" id="save-expenses">저장</button>
 <p id="status" role="status"></p>
 <section id="items" aria-label="비용 항목"></section>
 <template id="item">
@@ -91,11 +92,15 @@ function refresh() {
     document.querySelector('#sum-' + id).textContent = won(value);
   }
 }
-function save() {
+function markChanged() {
   refresh();
+  status.textContent = '변경 내용을 적용하려면 저장을 눌러주세요.';
+}
+
+function save() {
   try {
     localStorage.setItem(key, JSON.stringify(entries));
-    status.textContent = '';
+    status.textContent = '예식비용을 저장했어요.';
   } catch {
     status.textContent = '비용을 저장하지 못했어요. 이 페이지를 닫으면 변경사항이 사라질 수 있어요.';
   }
@@ -105,7 +110,7 @@ function bind(input, record, field, money = false) {
   input.addEventListener('input', () => {
     record[field] = money ? amount(input.value) : input.value;
     if (money) input.value = record[field] ? formatter.format(record[field]) : '';
-    save();
+    markChanged();
   });
 }
 function addExtra(card, entry, extra) {
@@ -116,7 +121,7 @@ function addExtra(card, entry, extra) {
     if (!confirm('이 별도 비용을 삭제할까요?')) return;
     entry.extras.splice(entry.extras.indexOf(extra), 1);
     row.remove();
-    save();
+    markChanged();
   });
   card.querySelector('.extras').append(row);
   return row;
@@ -132,24 +137,25 @@ function addCard(entry) {
     const extra = {name:'', amount:0};
     entry.extras.push(extra);
     addExtra(card, entry, extra).querySelector('.name').focus();
-    save();
+    markChanged();
   });
   card.querySelector('.actions > .remove').addEventListener('click', () => {
     if (!confirm('이 항목과 별도 비용을 삭제할까요?')) return;
     entries.splice(entries.indexOf(entry), 1);
     cards.delete(entry);
     card.remove();
-    save();
+    markChanged();
   });
   items.append(card);
   return card;
 }
 for (const entry of entries) addCard(entry);
 refresh();
+document.querySelector('#save-expenses').addEventListener('click', save);
 document.querySelector('#add').addEventListener('click', () => {
   const entry = {name:'', total:0, paid:0, extras:[]};
   entries.push(entry);
   addCard(entry).querySelector('.name').focus();
-  save();
+  markChanged();
 });
 </script></main></body></html>
