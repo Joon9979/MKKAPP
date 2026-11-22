@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>체크리스트 | 무꾸웨딩일지</title><style>
+:root{--paper:#fbf9f4;--ink:#292820;--mute:#5b584d;--olive:#424a35;--line:#ded9cd;--serif:"Georgia","Nanum Myeongjo","Batang",serif}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.7 system-ui,sans-serif;word-break:keep-all}
+a{color:inherit;text-decoration:none}
+a:focus-visible,summary:focus-visible{outline:3px solid #728151;outline-offset:5px}
+img{display:block;width:100%;height:100%;object-fit:cover}
+.wrap{width:min(100% - 40px,1140px);margin:auto}
+header{border-bottom:1px solid var(--line)}
+.mast{min-height:78px;display:flex;align-items:center;justify-content:space-between;gap:14px}
+.brand{display:flex;align-items:center;gap:10px;font:700 1.25rem var(--serif);white-space:nowrap}
+.monogram{display:grid;place-items:center;border:1px solid var(--olive);border-radius:50%;width:34px;height:34px;font:italic 1rem Georgia}
+nav{display:flex;gap:clamp(12px,4vw,38px);font-size:.875rem}
+nav a{min-height:44px;display:grid;place-items:center;white-space:nowrap}
+nav a:hover,.back:hover{text-decoration:underline;text-underline-offset:5px}
+.hero{display:grid;grid-template-columns:.82fr 1.18fr;align-items:stretch;min-height:590px;margin-block:24px 0}
+.hero-copy{padding:clamp(28px,6vw,85px) clamp(25px,5vw,65px);background:#eeeadf;display:flex;flex-direction:column;align-items:flex-start;justify-content:center}
+.eyebrow{color:var(--olive);font-size:.875rem;letter-spacing:.18em;margin:0 0 18px;font-family:Georgia,serif}
+h1,h2,h3,p,figure{margin:0}
+h1,h2,h3{font-family:var(--serif)}
+h1{font-size:clamp(2.3rem,5.8vw,4.65rem);font-weight:500;line-height:1.18;letter-spacing:-.055em}
+.hero-copy>p:not(.eyebrow){color:var(--mute);margin-top:20px;max-width:30ch}
+.cta{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:9px 20px;background:var(--olive);color:white;margin-top:28px}
+.cta:hover{background:#303825}
+.hero-photo{min-height:390px;position:relative;background:#b9bba7}
+.hero-photo img{position:absolute;inset:0;object-position:50% 40%}
+section[id]{scroll-margin-top:20px}
+.section{padding-block:clamp(54px,9vw,100px)}
+.heading{margin-bottom:26px}
+h2{font-size:clamp(1.9rem,4.5vw,3.2rem);font-weight:500;letter-spacing:-.05em;line-height:1.25}
+.heading p{color:var(--mute);margin-top:10px}
+.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.gallery img{aspect-ratio:4/5;height:auto;background:#e8e3d8}
+figcaption{padding:15px 0;border-bottom:1px solid var(--line)}
+figcaption h3{font-size:1.3rem}
+figcaption p{color:var(--mute);margin-top:3px}
+.guide{border-top:1px solid var(--line);display:grid;grid-template-columns:1fr 1.4fr;gap:30px}
+details{border-bottom:1px solid var(--line)}
+details:first-child{border-top:1px solid var(--line)}
+summary{cursor:pointer;padding:16px 8px;font-weight:650}
+details p{color:var(--mute);padding:0 8px 17px}
+footer{border-top:1px solid var(--line);color:var(--mute)}
+footer .wrap{padding-block:22px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+@media(max-width:720px){.mast{min-height:64px}.hero{grid-template-columns:1fr;min-height:auto;margin-top:14px}.hero-photo{min-height:0;aspect-ratio:5/4}.hero-copy{padding:34px 24px}.guide{grid-template-columns:1fr;gap:0}.gallery{grid-template-columns:1fr;gap:25px}.gallery img{aspect-ratio:5/4}.gallery img:first-child{object-position:center 42%}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+.brand-lockup{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.dday{display:inline-flex;align-items:center;background:#e9eddc;color:#364127;border-radius:99px;padding:3px 11px;font-size:.875rem;font-weight:750;white-space:nowrap}
+.wedding,.checklist{border-top:1px solid var(--line)}
+.venue-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:clamp(24px,5vw,52px);align-items:start}
+.venue-grid img{height:auto;aspect-ratio:4/3;background:#e8e3d8}
+.venue-grid figcaption{color:var(--mute);font-size:.875rem}
+.venue-grid figcaption a,.venue-links>a:not(.cta){text-decoration:underline;text-underline-offset:4px}
+.venue-info h3{font-size:1.65rem}
+.venue-info p{margin-top:7px;color:var(--mute)}
+.venue-links{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-block:16px}
+.venue-links .cta{margin:0}
+.contract{border-top:1px solid var(--line)}
+.contract dl{display:grid;grid-template-columns:auto 1fr;gap:8px 14px;margin:0;padding:0 8px 18px}
+.contract dd{margin:0;color:var(--mute)}
+.check-summary{padding:18px;background:#eeeadf;margin-bottom:22px}
+.check-summary progress{display:block;width:100%;margin:8px 0;accent-color:var(--olive)}
+.check-summary p{color:var(--mute);font-size:.875rem}
+.group-count{float:right;color:var(--mute);font-weight:500;padding-left:8px}
+.check-group summary{padding-block:14px}
+.check-title{margin-right:8px}
+.check-timing{font-size:.875rem;color:var(--mute);font-weight:400}
+.tasks{display:grid;gap:2px;padding:0 8px 12px}
+.tasks label{display:flex;align-items:flex-start;min-height:44px;gap:12px;padding:9px 4px;cursor:pointer}
+.tasks input{width:20px;height:20px;margin:3px 0 0;flex-shrink:0;accent-color:var(--olive)}
+.tasks input:checked+span{color:var(--mute);text-decoration:line-through}
+@media(max-width:720px){.venue-grid{grid-template-columns:1fr}.mast{flex-wrap:wrap;gap:0;padding-top:12px}.mast nav{width:100%;justify-content:space-between}.brand-lockup{gap:8px}.check-timing{display:block;margin-left:16px}}
+#venue-map-dialog{width:min(96vw,960px);max-height:92dvh;padding:0;border:1px solid var(--line);background:var(--paper);color:var(--ink);overflow:auto}
+#venue-map-dialog::backdrop{background:#201d17ba}
+#venue-map-dialog img{width:100%;height:auto;object-fit:contain}
+.map-toolbar{position:sticky;top:0;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 16px;background:var(--paper);border-bottom:1px solid var(--line)}
+.map-toolbar button{min-height:44px;padding:8px 15px;border:0;background:var(--olive);color:white;font:inherit;cursor:pointer}
+.map-toolbar button:focus-visible{outline:3px solid #728151;outline-offset:3px}
+html:has(#venue-map-dialog[open]){overflow:hidden}
+.venue-map-button{background:none;border:0;padding:0;min-height:44px;color:inherit;font:inherit;text-decoration:underline;text-underline-offset:4px;cursor:pointer}.venue-map-button:focus-visible{outline:3px solid #728151;outline-offset:3px}
+@media(max-width:720px){.mast nav{flex-wrap:wrap;justify-content:flex-start;column-gap:14px}}
+.sdm-cards article{padding:22px;border:1px solid var(--line);background:#fff;border-radius:12px}.sdm-cards p{margin:0 0 8px;color:var(--mute)}.sdm-cards h3{margin-bottom:8px}.sdm-cards a{display:inline-flex;align-items:center;min-height:44px;color:var(--olive);text-decoration:underline;text-underline-offset:4px}
+.hero{min-height:0;align-items:center}.hero-photo{width:min(100%,270px);min-height:0;aspect-ratio:3/4;justify-self:center;background:transparent}.hero-photo img{object-fit:contain}
+.dress-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(128px,100%),1fr));gap:14px;max-width:850px}.dress-gallery figure{max-width:170px}.dress-gallery img{width:100%;height:auto;border-radius:8px}
+@media(max-width:720px){.hero-photo{width:min(100%,175px)}}
+.hero-photo{width:100%;height:100%;min-height:380px;aspect-ratio:auto;overflow:hidden}.hero-photo img{object-fit:cover;object-position:center 54%}
+@media(max-width:720px){.hero-photo{min-height:0;aspect-ratio:5/4}}
+.dress-thumb{display:block;width:100%;padding:0;border:0;background:none;cursor:zoom-in;border-radius:8px}
+.dress-thumb:focus-visible,.dress-controls button:focus-visible{outline:3px solid #728151;outline-offset:3px}
+#dress-viewer{width:min(94vw,640px);max-height:94dvh;padding:0;border:1px solid var(--line);background:var(--paper);color:var(--ink)}
+#dress-viewer::backdrop{background:#201d17ba}
+#dress-viewer .dress-large{display:block;width:100%;height:min(69dvh,760px);object-fit:contain;touch-action:pan-y pinch-zoom}
+.dress-controls{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 12px}
+.dress-controls button{min-height:44px;padding:8px 12px;border:0;background:var(--olive);color:white;font:inherit;cursor:pointer}
+html:has(#dress-viewer[open]){overflow:hidden}
+#save-checklist{font:inherit;border:0;cursor:pointer;margin:8px 0}
+
+.checklist-page{width:min(960px,calc(100% - 32px));margin:24px auto 64px}.checklist-page > a{color:var(--olive);text-decoration:underline}.checklist-page .checklist{padding:22px 0 0;margin-top:16px;border:0}
+</style></head><body><main class="checklist-page"><a href="./">무꾸웨딩일지 홈</a>
+<section class="section checklist" id="checklist" aria-labelledby="checklist-title">
+<div class="heading"><h2 id="checklist-title">결혼 준비 체크리스트</h2></div>
+<div class="check-summary"><strong id="check-count" role="status">0 / 81 완료</strong><progress id="check-progress" aria-label="전체 준비 진행률" max="81" value="0"></progress><button type="button" id="save-checklist" class="cta">저장</button><p id="save-note" role="status">저장을 누르면 현재 브라우저에 저장돼요.</p></div>
+<details class="check-group" open><summary><span class="group-count">0 / 12</span><span class="check-title">예산 및 예식장</span><span class="check-timing">12~18개월 전</span></summary><div class="tasks">
+<label><input type="checkbox" id="wedding-task-1-1"><span>전체 결혼 예산 및 비용 분담 결정</span></label>
+<label><input type="checkbox" id="wedding-task-1-2"><span>예상 하객 수 및 예식 날짜·시간 결정</span></label>
+<label><input type="checkbox" id="wedding-task-1-3"><span>예식장 후보 비교 및 투어</span></label>
+<label><input type="checkbox" id="wedding-task-1-4"><span>예식장 계약 및 계약금 확인</span></label>
+<label><input type="checkbox" id="wedding-task-1-5"><span>대관료·식대·보증 인원 확인</span></label>
+<label><input type="checkbox" id="wedding-task-1-6"><span>주차·교통·식사 품질 확인</span></label>
+<label><input type="checkbox" id="wedding-task-1-7"><span>밝은 홀·높은 천장·단상식 여부 확인</span></label>
+<label><input type="checkbox" id="wedding-task-1-8"><span>적당한 버진로드 길이 확인</span></label>
+<label><input type="checkbox" id="wedding-task-1-9"><span>신부대기실 화장실 유무 확인</span></label>
+<label><input type="checkbox" id="wedding-task-1-10"><span>단독홀·분리예식 여부 확인</span></label>
+<label><input type="checkbox" id="wedding-task-1-11"><span>당일 계약 혜택 및 서비스 확인</span></label>
+<label><input type="checkbox" id="wedding-task-1-12"><span>계약금·잔금·취소 및 환불 규정 확인</span></label>
+</div></details><details class="check-group"><summary><span class="group-count">0 / 10</span><span class="check-title">스드메 계약 및 촬영 준비</span><span class="check-timing">8~12개월 전</span></summary><div class="tasks">
+<label><input type="checkbox" id="wedding-task-2-1"><span>스드메 패키지 비교 및 계약</span></label>
+<label><input type="checkbox" id="wedding-task-2-2"><span>패키지 포함 항목과 별도 비용 확인</span></label>
+<label><input type="checkbox" id="wedding-task-2-3"><span>스튜디오 촬영 일정 예약</span></label>
+<label><input type="checkbox" id="wedding-task-2-4"><span>드레스 투어 및 드레스샵 선택</span></label>
+<label><input type="checkbox" id="wedding-task-2-5"><span>촬영 드레스 셀렉 및 가봉</span></label>
+<label><input type="checkbox" id="wedding-task-2-6"><span>촬영용 드레스·신랑 턱시도 포함 여부 확인</span></label>
+<label><input type="checkbox" id="wedding-task-2-7"><span>헤어·메이크업 예약</span></label>
+<label><input type="checkbox" id="wedding-task-2-8"><span>촬영용 헤어·메이크업 포함 여부 확인</span></label>
+<label><input type="checkbox" id="wedding-task-2-9"><span>앨범·액자 구성 및 원본·수정본 제공 여부 확인</span></label>
+<label><input type="checkbox" id="wedding-task-2-10"><span>헬퍼비 및 추가 옵션 비용 확인</span></label>
+</div></details><details class="check-group"><summary><span class="group-count">0 / 7</span><span class="check-title">허니문·예물·예복 준비</span><span class="check-timing">4~8개월 전</span></summary><div class="tasks">
+<label><input type="checkbox" id="wedding-task-3-1"><span>허니문 여행지 결정</span></label>
+<label><input type="checkbox" id="wedding-task-3-2"><span>항공권 및 숙소 예약</span></label>
+<label><input type="checkbox" id="wedding-task-3-3"><span>예물·예물 시계 준비</span></label>
+<label><input type="checkbox" id="wedding-task-3-4"><span>신랑 예복 맞춤 또는 대여</span></label>
+<label><input type="checkbox" id="wedding-task-3-5"><span>한복 맞춤 또는 대여</span></label>
+<label><input type="checkbox" id="wedding-task-3-6"><span>예단 및 이바지 진행 여부 결정</span></label>
+<label><input type="checkbox" id="wedding-task-3-7"><span>양가 부모님과 비용 및 준비 사항 협의</span></label>
+</div></details><details class="check-group"><summary><span class="group-count">0 / 8</span><span class="check-title">웨딩 촬영 및 본식 업체 준비</span><span class="check-timing">3~6개월 전</span></summary><div class="tasks">
+<label><input type="checkbox" id="wedding-task-4-1"><span>웨딩 촬영 진행</span></label>
+<label><input type="checkbox" id="wedding-task-4-2"><span>촬영 사진 및 앨범·액자 확인</span></label>
+<label><input type="checkbox" id="wedding-task-4-3"><span>본식 스냅 및 DVD 예약</span></label>
+<label><input type="checkbox" id="wedding-task-4-4"><span>사회자·주례·축가 섭외</span></label>
+<label><input type="checkbox" id="wedding-task-4-5"><span>청첩장 제작</span></label>
+<label><input type="checkbox" id="wedding-task-4-6"><span>혼주 의상 준비</span></label>
+<label><input type="checkbox" id="wedding-task-4-7"><span>혼주 헤어·메이크업 예약</span></label>
+<label><input type="checkbox" id="wedding-task-4-8"><span>본식 드레스 셀렉 일정 확인</span></label>
+</div></details><details class="check-group"><summary><span class="group-count">0 / 9</span><span class="check-title">본식 세부 준비</span><span class="check-timing">1~2개월 전</span></summary><div class="tasks">
+<label><input type="checkbox" id="wedding-task-5-1"><span>본식 드레스 셀렉 및 가봉</span></label>
+<label><input type="checkbox" id="wedding-task-5-2"><span>본식 헤어·메이크업 예약 재확인</span></label>
+<label><input type="checkbox" id="wedding-task-5-3"><span>청첩장 발송</span></label>
+<label><input type="checkbox" id="wedding-task-5-4"><span>하객 참석 여부 확인</span></label>
+<label><input type="checkbox" id="wedding-task-5-5"><span>식순·음악·축가 최종 결정</span></label>
+<label><input type="checkbox" id="wedding-task-5-6"><span>부케 선정</span></label>
+<label><input type="checkbox" id="wedding-task-5-7"><span>폐백 진행 여부 결정</span></label>
+<label><input type="checkbox" id="wedding-task-5-8"><span>혼주 및 가족 도착 시간 공유</span></label>
+<label><input type="checkbox" id="wedding-task-5-9"><span>신랑·신부 준비물 목록 작성</span></label>
+</div></details><details class="check-group"><summary><span class="group-count">0 / 10</span><span class="check-title">예식 직전 최종 점검</span><span class="check-timing">2~3주 전</span></summary><div class="tasks">
+<label><input type="checkbox" id="wedding-task-6-1"><span>최종 하객 수 및 식사 보증 인원 확인</span></label>
+<label><input type="checkbox" id="wedding-task-6-2"><span>예식장·스드메·외부 업체 잔금 확인</span></label>
+<label><input type="checkbox" id="wedding-task-6-3"><span>추가 비용 발생 여부 확인</span></label>
+<label><input type="checkbox" id="wedding-task-6-4"><span>드레스·예복·반지 최종 확인</span></label>
+<label><input type="checkbox" id="wedding-task-6-5"><span>부케·폐백 등 진행 사항 확인</span></label>
+<label><input type="checkbox" id="wedding-task-6-6"><span>식권·주차권 준비 확인</span></label>
+<label><input type="checkbox" id="wedding-task-6-7"><span>당일 이동 동선 및 일정 공유</span></label>
+<label><input type="checkbox" id="wedding-task-6-8"><span>양가 가족 역할 분담</span></label>
+<label><input type="checkbox" id="wedding-task-6-9"><span>하객 교통·주차 안내</span></label>
+<label><input type="checkbox" id="wedding-task-6-10"><span>업체별 담당자 연락처 정리</span></label>
+</div></details><details class="check-group"><summary><span class="group-count">0 / 10</span><span class="check-title">스드메 추가 비용 확인</span><span class="check-timing">계약 및 일정 확인 시</span></summary><div class="tasks">
+<label><input type="checkbox" id="wedding-task-7-1"><span>헬퍼비 (촬영·본식 각각 확인)</span></label>
+<label><input type="checkbox" id="wedding-task-7-2"><span>촬영 시간 초과 추가금</span></label>
+<label><input type="checkbox" id="wedding-task-7-3"><span>서울 외 지역 출장비</span></label>
+<label><input type="checkbox" id="wedding-task-7-4"><span>야간씬·로드씬·한옥씬 추가금</span></label>
+<label><input type="checkbox" id="wedding-task-7-5"><span>헤어·메이크업 시술비</span></label>
+<label><input type="checkbox" id="wedding-task-7-6"><span>오전 6시 이전 얼리 스타트 비용</span></label>
+<label><input type="checkbox" id="wedding-task-7-7"><span>원본 파일·수정본 추가 비용</span></label>
+<label><input type="checkbox" id="wedding-task-7-8"><span>추가 앨범·액자 비용</span></label>
+<label><input type="checkbox" id="wedding-task-7-9"><span>드레스 추가금 및 피팅비</span></label>
+<label><input type="checkbox" id="wedding-task-7-10"><span>패키지 외 별도 촬영 비용</span></label>
+</div></details><details class="check-group"><summary><span class="group-count">0 / 8</span><span class="check-title">결혼식 당일</span><span class="check-timing">2027년 11월 27일</span></summary><div class="tasks">
+<label><input type="checkbox" id="wedding-task-8-1"><span>헤어·메이크업 진행 및 도착 시간 확인</span></label>
+<label><input type="checkbox" id="wedding-task-8-2"><span>신랑·신부·혼주 도착 확인</span></label>
+<label><input type="checkbox" id="wedding-task-8-3"><span>반지·부케·예복 등 준비물 확인</span></label>
+<label><input type="checkbox" id="wedding-task-8-4"><span>본식 스냅·DVD 촬영 확인</span></label>
+<label><input type="checkbox" id="wedding-task-8-5"><span>식권·주차권 및 하객 안내 확인</span></label>
+<label><input type="checkbox" id="wedding-task-8-6"><span>사회자·식순·음악 최종 확인</span></label>
+<label><input type="checkbox" id="wedding-task-8-7"><span>축의대 및 가족 담당자 확인</span></label>
+<label><input type="checkbox" id="wedding-task-8-8"><span>업체별 잔금 및 현장 추가 비용 확인</span></label>
+</div></details><details class="check-group"><summary><span class="group-count">0 / 7</span><span class="check-title">마지막으로 꼭 기억할 것</span><span class="check-timing">수시 점검</span></summary><div class="tasks">
+<label><input type="checkbox" id="wedding-task-9-1"><span>예식장과 스드메 계약서·견적서 보관</span></label>
+<label><input type="checkbox" id="wedding-task-9-2"><span>계약금·잔금 지급일 캘린더 등록</span></label>
+<label><input type="checkbox" id="wedding-task-9-3"><span>패키지 포함 항목과 추가금 구분</span></label>
+<label><input type="checkbox" id="wedding-task-9-4"><span>계약 당일 혜택은 계약서에 명시</span></label>
+<label><input type="checkbox" id="wedding-task-9-5"><span>취소·환불 및 업체 변경 규정 확인</span></label>
+<label><input type="checkbox" id="wedding-task-9-6"><span>양가 비용 분담 및 준비 담당자 정하기</span></label>
+<label><input type="checkbox" id="wedding-task-9-7"><span>계약 전 여러 업체 견적 비교하기</span></label>
+</div></details>
+</section>
+</main><script>
+(() => {
+  const checklist = document.querySelector('#checklist');
+  const boxes = Array.from(checklist.querySelectorAll('input[type=checkbox]'));
+  const storageKey = 'mukku.wedding.2027.checklist.v1';
+  const note = document.querySelector('#save-note');
+  const count = document.querySelector('#check-count');
+  const progress = document.querySelector('#check-progress');
+  let saved = [];
+
+  function showStorageError() {
+    note.textContent = '이 브라우저에서는 새로고침 후 체크 상태를 복원할 수 없어요.';
+  }
+
+  try {
+    const stored = JSON.parse(localStorage.getItem(storageKey) || '[]');
+    if (Array.isArray(stored)) saved = stored;
+  } catch {
+    showStorageError();
+  }
+
+  function refreshProgress() {
+    const checked = boxes.filter(box => box.checked).map(box => box.id);
+    count.textContent = checked.length + ' / ' + boxes.length + ' 완료';
+    progress.max = boxes.length;
+    progress.value = checked.length;
+    for (const group of checklist.querySelectorAll('.check-group')) {
+      group.querySelector('.group-count').textContent =
+        group.querySelectorAll('input:checked').length + ' / ' + group.querySelectorAll('input').length;
+    }
+    return checked;
+  }
+
+  for (const box of boxes) box.checked = saved.includes(box.id);
+  refreshProgress();
+  checklist.addEventListener('change', event => {
+    if (!boxes.includes(event.target)) return;
+    refreshProgress();
+    note.textContent = '변경 내용을 적용하려면 저장을 눌러주세요.';
+  });
+  document.querySelector('#save-checklist').addEventListener('click', () => {
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(refreshProgress()));
+      note.textContent = '체크리스트를 저장했어요.';
+    } catch {
+      showStorageError();
+    }
+  });
+})();
+</script></body></html>
