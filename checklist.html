@@ -100,7 +100,7 @@ html:has(#dress-viewer[open]){overflow:hidden}
 </style></head><body><main class="checklist-page"><a href="./">무꾸웨딩일지 홈</a>
 <section class="section checklist" id="checklist" aria-labelledby="checklist-title">
 <div class="heading"><h2 id="checklist-title">결혼 준비 체크리스트</h2></div>
-<div class="check-summary"><strong id="check-count" role="status">0 / 81 완료</strong><progress id="check-progress" aria-label="전체 준비 진행률" max="81" value="0"></progress><button type="button" id="save-checklist" class="cta">저장</button><p id="save-note" role="status">저장을 누르면 현재 브라우저에 저장돼요.</p></div>
+<div class="check-summary"><strong id="check-count" role="status">0 / 81 완료</strong><progress id="check-progress" aria-label="전체 준비 진행률" max="81" value="0"></progress><button type="button" id="save-checklist" class="cta">저장</button><p id="save-note" role="status">저장한 체크리스트는 누구나 보고 수정할 수 있어요.</p></div>
 <details class="check-group" open><summary><span class="group-count">0 / 12</span><span class="check-title">예산 및 예식장</span><span class="check-timing">12~18개월 전</span></summary><div class="tasks">
 <label><input type="checkbox" id="wedding-task-1-1"><span>전체 결혼 예산 및 비용 분담 결정</span></label>
 <label><input type="checkbox" id="wedding-task-1-2"><span>예상 하객 수 및 예식 날짜·시간 결정</span></label>
@@ -233,13 +233,58 @@ html:has(#dress-viewer[open]){overflow:hidden}
     refreshProgress();
     note.textContent = '변경 내용을 적용하려면 저장을 눌러주세요.';
   });
-  document.querySelector('#save-checklist').addEventListener('click', () => {
-    try {
-      localStorage.setItem(storageKey, JSON.stringify(refreshProgress()));
-      note.textContent = '체크리스트를 저장했어요.';
-    } catch {
-      showStorageError();
+
+const sharedUrl = 'https://mukku-journal-sync.engagingfairy4.chatgpt.site/checklist';
+const sharedButton = document.querySelector('#save-checklist');
+let revision = null;
+
+async function loadShared() {
+  sharedButton.disabled = true;
+  note.textContent = '공용 기록을 불러오는 중이에요.';
+  try {
+    const response = await fetch(sharedUrl, {cache:'no-store'});
+    if (!response.ok) throw new Error();
+    const result = await response.json();
+    if (!result || !('revision' in result) || (result.data !== null && !Array.isArray(result.data))) throw new Error();
+    revision = result.revision;
+    if (result.data !== null) {
+      for (const box of boxes) box.checked = result.data.includes(box.id);
+      refreshProgress();
     }
+    note.textContent = result.data === null
+      ? '공용 기록이 아직 없어요. 기존 기록이 있는 브라우저에서 먼저 저장하세요.'
+      : '최신 공용 기록을 불러왔어요.';
+    sharedButton.disabled = false;
+  } catch {
+    note.textContent = '공용 기록을 불러오지 못했어요. 연결을 확인하고 새로고침해 주세요.';
+  }
+}
+async function save() {
+  sharedButton.disabled = true;
+  note.textContent = '공용 기록에 저장 중이에요.';
+  try {
+    const response = await fetch(sharedUrl, {
+      method:'PUT', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({revision, data:refreshProgress()})
+    });
+    if (response.status === 409) {
+      note.textContent = '다른 사람이 먼저 저장했어요. 변경 내용을 확인한 뒤 새로고침하여 최신 기록을 불러오세요.';
+      return;
+    }
+    if (!response.ok) throw new Error();
+    revision = (await response.json()).revision;
+    note.textContent = '공용 기록에 저장했어요.';
+  } catch {
+    note.textContent = '공용 기록을 저장하지 못했어요. 다시 시도해 주세요.';
+  } finally {
+    sharedButton.disabled = false;
+  }
+}
+
+  sharedButton.addEventListener('click', save);
+  for (const box of boxes) box.disabled = true;
+  loadShared().finally(() => {
+    for (const box of boxes) box.disabled = false;
   });
 })();
 </script></body></html>

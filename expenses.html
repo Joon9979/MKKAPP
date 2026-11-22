@@ -24,7 +24,7 @@ input{width:100%;padding:8px;border:1px solid #888477;background:white;color:var
 <a href="./">무꾸웨딩일지 홈</a>
 <h1>예식 비용</h1>
 <p>총금액은 기본 계약 금액과 별도 비용을 합한 금액이에요. 잔금은 기본 계약 금액에서 낸 계약금만 빼서 계산해요.</p>
-<p>저장을 누르면 입력한 비용이 현재 브라우저에 저장돼요.</p>
+<p>저장한 예식비용은 누구나 보고 수정할 수 있어요.</p>
 <section class="summary" aria-label="전체 비용 합계">
 <div><span>총 예정 비용</span><strong id="sum-total">0원</strong></div>
 <div><span>낸 계약금</span><strong id="sum-paid">0원</strong></div>
@@ -97,12 +97,54 @@ function markChanged() {
   status.textContent = '변경 내용을 적용하려면 저장을 눌러주세요.';
 }
 
-function save() {
+
+const sharedUrl = 'https://mukku-journal-sync.engagingfairy4.chatgpt.site/expenses';
+const sharedButton = document.querySelector('#save-expenses');
+let revision = null;
+
+async function loadShared() {
+  sharedButton.disabled = true;
+  status.textContent = '공용 기록을 불러오는 중이에요.';
   try {
-    localStorage.setItem(key, JSON.stringify(entries));
-    status.textContent = '예식비용을 저장했어요.';
+    const response = await fetch(sharedUrl, {cache:'no-store'});
+    if (!response.ok) throw new Error();
+    const result = await response.json();
+    if (!result || !('revision' in result) || (result.data !== null && !Array.isArray(result.data))) throw new Error();
+    revision = result.revision;
+    if (result.data !== null) {
+      entries = result.data;
+      cards.clear();
+      items.replaceChildren();
+      for (const entry of entries) addCard(entry);
+      refresh();
+    }
+    status.textContent = result.data === null
+      ? '공용 기록이 아직 없어요. 기존 기록이 있는 브라우저에서 먼저 저장하세요.'
+      : '최신 공용 기록을 불러왔어요.';
+    sharedButton.disabled = false;
   } catch {
-    status.textContent = '비용을 저장하지 못했어요. 이 페이지를 닫으면 변경사항이 사라질 수 있어요.';
+    status.textContent = '공용 기록을 불러오지 못했어요. 연결을 확인하고 새로고침해 주세요.';
+  }
+}
+async function save() {
+  sharedButton.disabled = true;
+  status.textContent = '공용 기록에 저장 중이에요.';
+  try {
+    const response = await fetch(sharedUrl, {
+      method:'PUT', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({revision, data:entries})
+    });
+    if (response.status === 409) {
+      status.textContent = '다른 사람이 먼저 저장했어요. 변경 내용을 확인한 뒤 새로고침하여 최신 기록을 불러오세요.';
+      return;
+    }
+    if (!response.ok) throw new Error();
+    revision = (await response.json()).revision;
+    status.textContent = '공용 기록에 저장했어요.';
+  } catch {
+    status.textContent = '공용 기록을 저장하지 못했어요. 다시 시도해 주세요.';
+  } finally {
+    sharedButton.disabled = false;
   }
 }
 function bind(input, record, field, money = false) {
@@ -157,5 +199,11 @@ document.querySelector('#add').addEventListener('click', () => {
   entries.push(entry);
   addCard(entry).querySelector('.name').focus();
   markChanged();
+});
+items.inert = true;
+document.querySelector('#add').disabled = true;
+loadShared().finally(() => {
+  items.inert = false;
+  document.querySelector('#add').disabled = false;
 });
 </script></main></body></html>
