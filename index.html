@@ -111,6 +111,7 @@ html:has(#venue-map-dialog[open]){overflow:hidden}
 .dress-controls{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 12px}
 .dress-controls button{min-height:44px;padding:8px 12px;border:0;background:var(--olive);color:white;font:inherit;cursor:pointer}
 html:has(#dress-viewer[open]){overflow:hidden}
+#save-checklist{font:inherit;border:0;cursor:pointer;margin:8px 0}
 </style>
 </head>
 <body id="top">
@@ -157,7 +158,7 @@ html:has(#dress-viewer[open]){overflow:hidden}
 </section>
 <section class="section checklist" id="checklist" aria-labelledby="checklist-title">
 <div class="heading"><h2 id="checklist-title">결혼 준비 체크리스트</h2></div>
-<div class="check-summary"><strong id="check-count" role="status">0 / 81 완료</strong><progress id="check-progress" aria-label="전체 준비 진행률" max="81" value="0"></progress><p id="save-note">체크 상태는 현재 브라우저에 저장돼요.</p></div>
+<div class="check-summary"><strong id="check-count" role="status">0 / 81 완료</strong><progress id="check-progress" aria-label="전체 준비 진행률" max="81" value="0"></progress><button type="button" id="save-checklist" class="cta">저장</button><p id="save-note" role="status">저장을 누르면 현재 브라우저에 저장돼요.</p></div>
 <details class="check-group" open><summary><span class="group-count">0 / 12</span><span class="check-title">예산 및 예식장</span><span class="check-timing">12~18개월 전</span></summary><div class="tasks">
 <label><input type="checkbox" id="wedding-task-1-1"><span>전체 결혼 예산 및 비용 분담 결정</span></label>
 <label><input type="checkbox" id="wedding-task-1-2"><span>예상 하객 수 및 예식 날짜·시간 결정</span></label>
@@ -317,9 +318,13 @@ html:has(#dress-viewer[open]){overflow:hidden}
   refreshProgress();
   checklist.addEventListener('change', event => {
     if (!boxes.includes(event.target)) return;
-    const checked = refreshProgress();
+    refreshProgress();
+    note.textContent = '변경 내용을 적용하려면 저장을 눌러주세요.';
+  });
+  document.querySelector('#save-checklist').addEventListener('click', () => {
     try {
-      localStorage.setItem(storageKey, JSON.stringify(checked));
+      localStorage.setItem(storageKey, JSON.stringify(refreshProgress()));
+      note.textContent = '체크리스트를 저장했어요.';
     } catch {
       showStorageError();
     }
